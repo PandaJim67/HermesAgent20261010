@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>課程報名｜Johnny Education Centre</title>
+<style>
+:root{
+  --primary:#1a3a8a;--primary2:#2563eb;--accent:#00a896;--warm:#f97316;
+  --bg:#f4f7fd;--surface:#fff;--ink:#1e2a45;--ink2:#5a6a88;--muted:#8e99b0;
+  --line:#dfe6f5;--line2:#eef2fb;--danger:#e03131;--ok:#0f9d63;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC','Microsoft JhengHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;
+  background-image:radial-gradient(circle at 10% 0%,#e6f0ff,transparent 40%),radial-gradient(circle at 90% 10%,#dffcf6,transparent 40%);min-height:100vh}
+a{color:var(--primary2)}
+.top{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;padding:26px 20px}
+.top-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.top .mark{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.18);display:flex;
+  align-items:center;justify-content:center;font-weight:800;font-size:1.4rem;flex-shrink:0}
+.top h1{font-size:1.4rem;font-weight:800}
+.top p{font-size:.85rem;opacity:.85}
+.top .back{margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;border-radius:10px;padding:8px 14px;font-size:.82rem;text-decoration:none;font-weight:600}
+.top .back:hover{background:rgba(255,255,255,.28)}
+
+.wrap{max-width:760px;margin:0 auto;padding:26px 18px 60px}
+.intro{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;
+  font-size:.92rem;color:var(--ink2);margin-bottom:22px;box-shadow:0 2px 10px rgba(26,58,138,.05)}
+.intro b{color:var(--ink)}
+
+form{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 4px 18px rgba(26,58,138,.06)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:6px}
+.f.full{grid-column:1/-1}
+label{font-size:.86rem;font-weight:600;color:var(--ink)}
+label .req{color:var(--danger)}
+label .opt{color:var(--muted);font-weight:500}
+input,select,textarea{font-family:var(--font);font-size:.95rem;color:var(--ink);background:#fff;
+  border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;transition:.16s;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary2);box-shadow:0 0 0 3px rgba(37,99,235,.16)}
+textarea{resize:vertical;min-height:80px}
+.err{font-size:.78rem;color:var(--danger);min-height:0;display:none}
+.err.show{display:block}
+input.invalid,select.invalid,textarea.invalid{border-color:var(--danger);box-shadow:0 0 0 3px rgba(224,49,49,.12)}
+
+.submit{margin-top:20px;width:100%;background:linear-gradient(135deg,var(--primary2),var(--accent));
+  color:#fff;border:none;border-radius:13px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;
+  font-family:var(--font);box-shadow:0 5px 14px rgba(37,99,235,.3);transition:.15s}
+.submit:hover{transform:translateY(-2px)}
+.submit:active{transform:translateY(0)}
+
+/* success panel */
+.success{display:none;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:36px 28px;text-align:center;box-shadow:0 4px 18px rgba(26,58,138,.06)}
+.success.show{display:block;animation:pop .4s ease}
+.success .ico{font-size:3.4rem;animation:bob 1.8s ease-in-out infinite}
+.success h2{font-size:1.5rem;font-weight:800;color:var(--ok);margin:10px 0 6px}
+.success p{color:var(--ink2);font-size:.95rem}
+.success .ref{display:inline-block;background:var(--line2);border:1px solid var(--line);border-radius:10px;
+  padding:8px 16px;font-weight:700;color:var(--primary);margin-top:14px;font-size:1.05rem}
+.btn2{margin-top:20px;background:#fff;border:1.5px solid var(--line);color:var(--ink);border-radius:11px;
+  padding:11px 20px;font-family:var(--font);font-weight:600;cursor:pointer}
+.btn2:hover{border-color:var(--primary2);color:var(--primary2)}
+
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+:focus-visible{outline:3px solid var(--primary2);outline-offset:2px;border-radius:8px}
+@media print{.top,.submit,.btn2{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="top-in">
+    <span class="mark" aria-hidden="true">J</span>
+    <div>
+      <h1>課程報名</h1>
+      <p>Johnny Education Centre · 填完表後會有參考編號</p>
+    </div>
+    <a class="back" href="../">← 導覽主頁</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="intro">
+    <b>歡迎報讀 Johnny Education Centre 課程。</b>請填寫以下資料，我們會在 1 個工作天內聯繫您。
+    帶 <span style="color:var(--danger)">*</span> 為必填項。資料只儲存於本裝置瀏覽器（demo），未送任何伺服器。
+  </div>
+
+  <form id="form" novalidate>
+    <div class="grid">
+      <div class="f">
+        <label for="pname">家長姓名 <span class="req">*</span></label>
+        <input id="pname" name="pname" type="text" placeholder="例如：陳大明" autocomplete="name">
+        <span class="err" data-for="pname"></span>
+      </div>
+      <div class="f">
+        <label for="phone">聯絡電話 <span class="req">*</span></label>
+        <input id="phone" name="phone" type="tel" placeholder="例如：9123 4567" inputmode="tel" autocomplete="tel">
+        <span class="err" data-for="phone"></span>
+      </div>
+      <div class="f full">
+        <label for="email">Email <span class="req">*</span></label>
+        <input id="email" name="email" type="email" placeholder="例如：parent@example.com" autocomplete="email">
+        <span class="err" data-for="email"></span>
+      </div>
+      <div class="f">
+        <label for="kname">小朋友姓名 <span class="req">*</span></label>
+        <input id="kname" name="kname" type="text" placeholder="例如：陳小美">
+        <span class="err" data-for="kname"></span>
+      </div>
+      <div class="f">
+        <label for="dob">出生日期 <span class="req">*</span></label>
+        <input id="dob" name="dob" type="date">
+        <span class="err" data-for="dob"></span>
+      </div>
+      <div class="f">
+        <label for="grade">就讀年級 <span class="req">*</span></label>
+        <select id="grade" name="grade">
+          <option value="">請選擇…</option>
+          <option>小二</option><option>小三</option><option>小四</option><option>小五</option><option>小六</option>
+        </select>
+        <span class="err" data-for="grade"></span>
+      </div>
+      <div class="f">
+        <label for="course">想報讀課程 <span class="req">*</span></label>
+        <select id="course" name="course">
+          <option value="">請選擇…</option>
+          <option>AI 小小探索班 — HKD 1,100 / 4 堂</option>
+          <option>兒童 Python 啟蒙班 — HKD 1,300 / 4 堂</option>
+          <option>小學全科提升班 — HKD 900 / 4 堂</option>
+          <option>創意繪畫小達人班 — HKD 1,200 / 4 堂</option>
+        </select>
+        <span class="err" data-for="course"></span>
+      </div>
+      <div class="f full">
+        <label for="note">備註 <span class="opt">（選填）</span></label>
+        <textarea id="note" name="note" placeholder="如有特殊需要或想補充的資料，可在此填寫"></textarea>
+      </div>
+    </div>
+    <button class="submit" type="submit">提交報名</button>
+  </form>
+
+  <div class="success" id="success" role="alert" aria-live="polite">
+    <div class="ico">🎉</div>
+    <h2>報名成功！</h2>
+    <p>多謝您，我們已收到申請，並會盡快聯繫您。<br>請記低以下參考編號：</p>
+    <div class="ref" id="refNo"></div>
+    <div>
+      <button class="btn2" id="again" type="button">再報一位</button>
+      <a class="btn2" href="../">回導覽主頁</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var form=document.getElementById('form'),
+      success=document.getElementById('success'),
+      refNo=document.getElementById('refNo');
+  var KEY='johnny_signups';
+
+  // validators -> {field:true}
+  function validators(){
+    var f={};
+    var pname=val('pname',document.getElementById('pname').value.trim(),v=>v.length>=2?'':'請輸入家長姓名（至少 2 字）');
+    var phone=val('phone',document.getElementById('phone').value.trim(),v=>/^[0-9+\-\s]{6,15}$/.test(v)?'':'請輸入有效電話（6–15 位數字）');
+    var email=val('email',document.getElementById('email').value.trim(),v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?'':'請輸入有效 Email');
+    var kname=val('kname',document.getElementById('kname').value.trim(),v=>v.length>=2?'':'請輸入小朋友姓名');
+    var dob=document.getElementById('dob').value;
+    var dobErr='';
+    if(!dob){dobErr='請選擇出生日期';}
+    else{
+      var d=new Date(dob), now=new Date();
+      var okAge=(now.getFullYear()-d.getFullYear())>=3 && (now.getFullYear()-d.getFullYear())<=11;
+      if(d>now) dobErr='出生日期不能晚於今日';
+      else if(!okAge) dobErr='年齡需介乎 3–11 歲';
+    }
+    f.dob=dobErr?{key:'dob',msg:dobErr}:null;
+    var grade=val('grade',document.getElementById('grade').value,v=>v?'':'請選擇就讀年級');
+    var course=val('course',document.getElementById('course').value,v=>v?'':'請選擇想報讀課程');
+    f={pname:pname,phone:phone,email:email,kname:kname,dob:f.dob,grade:grade,course:course};
+    return f;
+  }
+  function val(key,val_,fn){var msg=fn(val_);return msg?{key:key,msg:msg}:null;}
+
+  function showErrs(errors){
+    var any=false;
+    ['pname','phone','email','kname','dob','grade','course'].forEach(function(k){
+      var el=document.getElementById(k), err=document.querySelector('.err[data-for="'+k+'"]');
+      var e=errors[k];
+      if(e){el.classList.add('invalid');if(err){err.textContent=e.msg;err.classList.add('show');}any=true;}
+      else{el.classList.remove('invalid');if(err)err.classList.remove('show');}
+    });
+    return any;
+  }
+
+  function ref(){
+    var s='JS'+new Date().getFullYear().toString().slice(2);
+    s+=Math.random().toString(36).slice(2,6).toUpperCase();
+    return s;
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var errors=validators();
+    var bad=showErrs(errors);
+    if(bad){
+      var first=document.querySelector('.invalid');
+      if(first){first.focus();first.scrollIntoView({behavior:'smooth',block:'center'});}
+      return;
+    }
+    // build record
+    var rec={
+      ref:ref(),
+      submittedAt:new Date().toISOString(),
+      parent:document.getElementById('pname').value.trim(),
+      phone:document.getElementById('phone').value.trim(),
+      email:document.getElementById('email').value.trim(),
+      child:document.getElementById('kname').value.trim(),
+      dob:document.getElementById('dob').value,
+      grade:document.getElementById('grade').value,
+      course:document.getElementById('course').value,
+      note:document.getElementById('note').value.trim()
+    };
+    // save to LocalStorage
+    var arr=[]; try{arr=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(_){arr=[];}
+    arr.push(rec);
+    try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(_){}
+    // success
+    refNo.textContent=rec.ref;
+    form.style.display='none';
+    success.classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  document.getElementById('again').addEventListener('click',function(){
+    form.reset();
+    form.querySelectorAll('.invalid').forEach(function(x){x.classList.remove('invalid');});
+    form.querySelectorAll('.err.show').forEach(function(x){x.classList.remove('show');});
+    success.classList.remove('show');
+    form.style.display='';
+    document.getElementById('pname').focus();
+  });
+
+  // clear error on input
+  ['pname','phone','email','kname','dob','grade','course'].forEach(function(k){
+    var el=document.getElementById(k);
+    var ev=el.tagName==='SELECT'?'change':'input';
+    el.addEventListener(ev,function(){
+      el.classList.remove('invalid');
+      var err=document.querySelector('.err[data-for="'+k+'"]');
+      if(err)err.classList.remove('show');
+    });
+  });
+})();
+</script>
+</body>
+</html>

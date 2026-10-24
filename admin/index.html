@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin 後台｜報名申請管理</title>
+<style>
+:root{
+  --bg:#0f1729;--surface:#18223a;--surface2:#1f2c48;--ink:#eef2fb;--ink2:#a7b0c6;--muted:#6b7488;
+  --line:#2a3350;--brand:#4353ff;--ok:#2fc79a;--warn:#f0a44a;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC','Microsoft JhengHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 15% 0%,rgba(67,83,255,.16),transparent 40%),
+                   radial-gradient(circle at 90% 10%,rgba(0,194,168,.1),transparent 35%)}
+a{color:var(--brand);text-decoration:none}
+
+/* login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--line);
+  border-radius:20px;padding:34px 28px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.login .lock{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--brand),var(--ok));
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px}
+.login h1{font-size:1.3rem;text-align:center;font-weight:800;margin-bottom:4px}
+.login .sub{text-align:center;font-size:.85rem;color:var(--muted);margin-bottom:22px}
+.login label{font-size:.82rem;font-weight:600;color:var(--ink2);display:block;margin-bottom:6px}
+.login input{width:100%;background:var(--surface2);border:1.5px solid var(--line);border-radius:11px;
+  padding:12px 14px;color:var(--ink);font-size:.95rem;font-family:var(--font);margin-bottom:14px}
+.login input:focus{outline:none;border-color:var(--brand)}
+.login .hint{font-size:.76rem;color:var(--muted);text-align:center;margin-bottom:12px}
+.login .hint code{background:var(--surface2);border-radius:5px;padding:1px 6px;color:var(--brand)}
+.login button{width:100%;background:var(--brand);color:#fff;border:none;border-radius:11px;padding:13px;
+  font-size:.98rem;font-weight:700;cursor:pointer;font-family:var(--font)}
+.login button:hover{filter:brightness(1.1)}
+.login .err{color:var(--warn);font-size:.82rem;text-align:center;margin-top:10px;display:none}
+.login .toapp{margin-top:14px;text-align:center;font-size:.82rem;color:var(--muted)}
+
+/* app shell */
+.app{max-width:1000px;margin:0 auto;padding:22px 18px 60px}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.top .mark{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--brand),var(--ok));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;flex-shrink:0}
+.top h1{font-size:1.35rem;font-weight:800}
+.top .sub{font-size:.82rem;color:var(--muted)}
+.top .sp{flex:1}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 18px;
+  font-size:.85rem;color:var(--ink2)}
+.stat b{color:var(--ok);font-size:1.1rem;margin-right:4px}
+.logout{background:var(--surface2);border:1px solid var(--line);color:var(--ink2);border-radius:10px;
+  padding:9px 14px;font-size:.82rem;cursor:pointer;font-family:var(--font);font-weight:600}
+.logout:hover{color:var(--ink);border-color:var(--brand)}
+
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.search{flex:1;min-width:180px}
+.search input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:11px;
+  padding:10px 14px;color:var(--ink);font-size:.9rem;font-family:var(--font)}
+.search input:focus{outline:none;border-color:var(--brand)}
+.export{background:var(--surface);border:1px solid var(--line);color:var(--ink2);border-radius:11px;
+  padding:10px 14px;font-size:.82rem;cursor:pointer;font-family:var(--font);font-weight:600}
+.export:hover{color:var(--ink);border-color:var(--brand)}
+
+/* table / list */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row .head{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;
+  padding:15px 18px;cursor:pointer}
+@media (max-width:620px){.row .head{grid-template-columns:auto 1fr auto}}
+.row .num{width:34px;height:34px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:.85rem;color:var(--brand)}
+.row .meta{min-width:0}
+.row .meta .nm{font-weight:700;font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta .ct{font-size:.8rem;color:var(--muted);margin-top:2px}
+.row .ref{font-size:.82rem;color:var(--ink2);font-variant-numeric:tabular-nums;background:var(--surface2);
+  border-radius:8px;padding:5px 10px}
+.row .date{font-size:.78rem;color:var(--muted);text-align:right}
+@media (max-width:620px){.row .date{display:none}}
+.row .tgl{font-size:.7rem;color:var(--muted);transition:transform .2s}
+.row.open .tgl{transform:rotate(180deg)}
+.detail{display:none;border-top:1px solid var(--line);padding:16px 18px;background:rgba(0,0,0,.12)}
+.row.open .detail{display:block}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+@media (max-width:520px){.dgrid{grid-template-columns:1fr}}
+.dgrid .k{font-size:.72rem;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.dgrid .v{font-size:.92rem;margin-top:2px;word-break:break-word}
+.dgrid .full{grid-column:1/-1}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted);background:var(--surface);
+  border:1px dashed var(--line);border-radius:16px;font-size:.95rem}
+.empty .big{font-size:2.4rem;margin-bottom:10px}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;margin-left:8px}
+.badge.new{background:rgba(47,199,154,.16);color:var(--ok)}
+
+@media print{
+  body{background:#fff;color:#000}
+  .top .mark,.logout,.toolbar,.tgl{display:none!important}
+  .row,.empty{border:1px solid #ccc;background:#fff}
+  .row .head{grid-template-columns:auto 1fr}
+  .detail{display:block!important;background:#fff}
+  .row{break-inside:avoid}
+}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login">
+    <div class="lock" aria-hidden="true">🔐</div>
+    <h1>Admin 後台</h1>
+    <div class="sub">報名申請管理 · 登入後才可查看全部資料</div>
+    <form id="loginForm">
+      <label for="user">帳號</label>
+      <input id="user" type="text" placeholder="admin" autocomplete="username" required>
+      <label for="pass">密碼</label>
+      <input id="pass" type="password" placeholder="password" autocomplete="current-password" required>
+      <div class="hint">Demo 預設：<code>admin</code> / <code>password</code>（檔首常數可改）</div>
+      <button type="submit">登入</button>
+      <div class="err" id="loginErr">帳號或密碼錯誤</div>
+    </form>
+    <div class="toapp"><a href="../signup/">← 報名頁面</a></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+  <div class="top">
+    <span class="mark" aria-hidden="true">J</span>
+    <div>
+      <h1>報名申請</h1>
+      <div class="sub" id="subLine">共 0 筆申請</div>
+    </div>
+    <div class="sp"></div>
+    <div class="stat"><b id="statCount">0</b>筆</div>
+    <button class="logout" id="logout">登出</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <input id="q" type="search" placeholder="搜尋姓名、電話、Email、課程…">
+    </div>
+    <button class="export" id="export">匯出 CSV</button>
+    <button class="export" id="refresh">重新整理</button>
+  </div>
+
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty" style="display:none">
+    <div class="big">📭</div>
+    <div>暫時冇申請資料。<br>請於同部裝置嘅「報名頁面」提交後再查看。</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== demo credentials (change here; client-side only, NOT real security) =====
+  var ADMIN={user:"admin",pass:"password"};
+  var KEY='johnny_signups', SESSION='johnny_admin_session';
+
+  var $=function(id){return document.getElementById(id);};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  function loggedIn(){return sessionStorage.getItem(SESSION)==='1';}
+
+  // ---- login ----
+  $('loginForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var u=$('user').value.trim(), p=$('pass').value;
+    if(u===ADMIN.user && p===ADMIN.pass){
+      sessionStorage.setItem(SESSION,'1');
+      enterApp();
+    } else {
+      $('loginErr').style.display='block';
+      $('pass').value='';
+    }
+  });
+  function enterApp(){
+    $('loginWrap').style.display='none';
+    $('app').style.display='';
+    load();
+  }
+  $('logout').addEventListener('click',function(){
+    sessionStorage.removeItem(SESSION);
+    $('app').style.display='none';
+    $('loginWrap').style.display='flex';
+    $('pass').value='';
+    $('loginErr').style.display='none';
+  });
+
+  // ---- data ----
+  function getData(){
+    try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(_){return [];}
+  }
+  function load(){
+    var data=getData().slice().reverse();
+    var q=$('q').value.trim().toLowerCase();
+    var rows=data.filter(function(r){
+      if(!q) return true;
+      var hay=[r.parent,r.phone,r.email,r.child,r.dob,r.grade,r.course,r.note,r.ref].join(' ').toLowerCase();
+      return hay.indexOf(q)>=0;
+    });
+    var list=$('list');
+    list.innerHTML='';
+    $('statCount').textContent=data.length;
+    $('subLine').textContent='共 '+data.length+' 筆申請';
+    if(rows.length===0){
+      list.style.display='none';
+      $('empty').style.display='block';
+      $('empty').querySelector('div:last-child').textContent = data.length===0
+        ? '暫時冇申請資料。請於同部裝置嘅「報名頁面」提交後再查看。'
+        : '冇符合搜尋條件嘅申請。';
+    } else {
+      list.style.display='';
+      $('empty').style.display='none';
+      rows.forEach(function(r,i){ list.appendChild(rowEl(r,i)); });
+    }
+  }
+
+  function fmtDate(iso){
+    if(!iso) return '';
+    var d=new Date(iso);
+    if(isNaN(d)) return iso;
+    return d.toLocaleString('zh-Hant-HK',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+
+  function rowEl(r,i){
+    var el=document.createElement('div');
+    el.className='row';
+    var isNew=(r.submittedAt && (Date.now()-new Date(r.submittedAt))<86400000*7);
+    el.innerHTML =
+      '<div class="head" role="button" tabindex="0" aria-expanded="false">'+
+        '<div class="num">'+(i+1)+'</div>'+
+        '<div class="meta"><div class="nm">'+esc(r.child||'(無)')+' <span style="color:var(--muted);font-weight:500;font-size:.85rem">／ 家長：'+esc(r.parent||'(無)')+'</span>'+
+          (isNew?'<span class="badge new">新</span>':'')+'</div>'+
+          '<div class="ct">'+esc(r.course||'(未選課程)')+'</div></div>'+
+        '<div class="ref">'+esc(r.ref||'—')+'</div>'+
+        '<div class="date">'+esc(fmtDate(r.submittedAt))+'</div>'+
+        '<div class="tgl">▾</div>'+
+      '</div>'+
+      '<div class="detail"><div class="dgrid">'+
+        cell('家長姓名',r.parent)+cell('聯絡電話',r.phone)+cell('Email',r.email)+cell('小朋友姓名',r.child)+
+        cell('出生日期',r.dob)+cell('就讀年級',r.grade)+cell('想報讀課程',r.course)+
+        '<div class="full"><div class="k">備註</div><div class="v">'+(r.note?esc(r.note):'<span style="color:var(--muted)">（無）</span>')+'</div></div>'+
+        cell('參考編號',r.ref)+cell('提交時間',fmtDate(r.submittedAt))+
+      '</div></div>';
+    var head=el.querySelector('.head');
+    function toggle(){el.classList.toggle('open');head.setAttribute('aria-expanded',el.classList.contains('open'));}
+    head.addEventListener('click',toggle);
+    head.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+    return el;
+  }
+  function cell(k,v){
+    if((v==null)||v==='') return '<div><div class="k">'+k+'</div><div class="v" style="color:var(--muted)">（無）</div></div>';
+    var a=(k==='Email'?'<a href="mailto:'+esc(v)+'" style="color:var(--brand)">'+esc(v)+'</a>'
+         :k==='聯絡電話'?'<a href="tel:'+esc(v)+'" style="color:var(--brand)">'+esc(v)+'</a>'
+         :esc(v));
+    return '<div><div class="k">'+k+'</div><div class="v">'+a+'</div></div>';
+  }
+
+  // ---- search / refresh / export ----
+  $('q').addEventListener('input',load);
+  $('refresh').addEventListener('click',load);
+  $('export').addEventListener('click',function(){
+    var data=getData();
+    if(!data.length){alert('暫無資料可匯出。');return;}
+    var head=['ref','parent','phone','email','child','dob','grade','course','note','submittedAt'];
+    var csv=head.join(',')+'\n'+data.map(function(r){
+      return head.map(function(h){return '"'+String(r[h]==null?'':r[h]).replace(/"/g,'""')+'"';}).join(',');
+    }).join('\n');
+    var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='johnny_signups.csv';
+    a.click();URL.revokeObjectURL(a.href);
+  });
+
+  // ---- init ----
+  if(loggedIn()) enterApp();
+  else { $('loginWrap').style.display='flex'; }
+})();
+</script>
+</body>
+</html>

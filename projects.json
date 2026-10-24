@@ -4,7 +4,7 @@
     "owner": "JimSir",
     "note": "新增專案只需在此檔加一個 object 即可，頁面會自動載入。"
   },
-  "categories": ["工具", "儀表板", "網站", "簡報", "遊戲"],
+  "categories": ["工具", "儀表板", "網站", "簡報", "遊戲", "表單"],
   "projects": [
     {
       "id": "todo",
@@ -65,6 +65,30 @@
       "local": "kids-game/index.html",
       "updated": "2026-10-24",
       "accent": "#ff5fa2"
+    },
+    {
+      "id": "signup",
+      "name": "課程報名表",
+      "desc": "Johnny Education Centre 報名頁面：家長／小朋友資料、課程 dropdown、欄位 validation 與成功參考編號。",
+      "stack": ["HTML", "CSS", "JavaScript", "LocalStorage"],
+      "status": "已上線",
+      "category": "表單",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/signup/",
+      "local": "signup/index.html",
+      "updated": "2026-10-24",
+      "accent": "#00a896"
+    },
+    {
+      "id": "admin",
+      "name": "報名 Admin 後台",
+      "desc": "需登入後方可查看所有申請：列表＋展開詳情、搜尋、匯出 CSV 與重新整理。",
+      "stack": ["HTML", "CSS", "JavaScript"],
+      "status": "已上線",
+      "category": "表單",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/admin/",
+      "local": "admin/index.html",
+      "updated": "2026-10-24",
+      "accent": "#9b6dff"
     }
   ]
 }
