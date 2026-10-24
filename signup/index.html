@@ -155,6 +155,7 @@ input.invalid,select.invalid,textarea.invalid{border-color:var(--danger);box-sha
   </div>
 </div>
 
+<script src="../site-config.js"></script>
 <script>
 (function(){
   "use strict";
@@ -230,6 +231,12 @@ input.invalid,select.invalid,textarea.invalid{border-color:var(--danger);box-sha
     var arr=[]; try{arr=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(_){arr=[];}
     arr.push(rec);
     try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(_){}
+    // save to Google Sheets (if endpoint configured)
+    var ep=(window.APPS && window.APPS.googleEndpoint) ? window.APPS.googleEndpoint : '';
+    if(ep){
+      fetch(ep+'?op=add',{method:'POST',body:JSON.stringify(rec)}).then(function(){})
+        .catch(function(){});
+    }
     // success
     refNo.textContent=rec.ref;
     form.style.display='none';

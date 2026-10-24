@@ -147,10 +147,15 @@ a{color:var(--brand);text-decoration:none}
   <div class="list" id="list"></div>
   <div class="empty" id="empty" style="display:none">
     <div class="big">📭</div>
-    <div>暫時冇申請資料。<br>請於同部裝置嘅「報名頁面」提交後再查看。</div>
+    <div>暫時冇申請資料。<br>請於「報名頁面」提交後再查看。</div>
+  </div>
+  <div class="empty" id="loading" style="display:none">
+    <div class="big">⏳</div>
+    <div>載入中…</div>
   </div>
 </div>
 
+<script src="../site-config.js"></script>
 <script>
 (function(){
   "use strict";
@@ -190,32 +195,64 @@ a{color:var(--brand);text-decoration:none}
   });
 
   // ---- data ----
-  function getData(){
+  function localData(){
     try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(_){return [];}
   }
+  function googleEndpoint(){return (window.APPS && window.APPS.googleEndpoint) ? window.APPS.googleEndpoint : '';}
+
   function load(){
-    var data=getData().slice().reverse();
     var q=$('q').value.trim().toLowerCase();
-    var rows=data.filter(function(r){
+    if(googleEndpoint()){
+      $('loading').style.display='block'; $('empty').style.display='none'; $('list').style.display='none';
+      fetch(googleEndpoint()+'?op=list')
+        .then(function(r){return r.ok?r.json():[];})
+        .then(function(gdata){
+          $('loading').style.display='none';
+          mergeAndRender(q, localData(), gdata||[]);
+        })
+        .catch(function(){
+          $('loading').style.display='none';
+          mergeAndRender(q, localData(), []);
+          flash('（Google 載入失敗，目前顯示本地資料）');
+        });
+    } else {
+      mergeAndRender(q, localData(), []);
+    }
+  }
+
+  function mergeAndRender(q, localArr, googleArr){
+    // merge by ref; google records win (canonical), local-only kept as backup
+    var seen={}, all=[];
+    (googleArr||[]).forEach(function(r){ if(r.ref) seen[r.ref]=1; all.push(r); });
+    localArr.forEach(function(r){ if(!r.ref || !seen[r.ref]) all.push(r); });
+    all=all.slice().reverse();
+    var rows=all.filter(function(r){
       if(!q) return true;
       var hay=[r.parent,r.phone,r.email,r.child,r.dob,r.grade,r.course,r.note,r.ref].join(' ').toLowerCase();
       return hay.indexOf(q)>=0;
     });
     var list=$('list');
     list.innerHTML='';
-    $('statCount').textContent=data.length;
-    $('subLine').textContent='共 '+data.length+' 筆申請';
+    $('statCount').textContent=all.length;
+    $('subLine').textContent='共 '+all.length+' 筆申請' + (googleEndpoint() ? '（Google Sheets）' : '（本地資料）');
     if(rows.length===0){
       list.style.display='none';
       $('empty').style.display='block';
-      $('empty').querySelector('div:last-child').textContent = data.length===0
-        ? '暫時冇申請資料。請於同部裝置嘅「報名頁面」提交後再查看。'
+      $('empty').querySelector('div:last-child').textContent = all.length===0
+        ? '暫時冇申請資料。請於「報名頁面」提交後再查看。'
         : '冇符合搜尋條件嘅申請。';
     } else {
       list.style.display='';
       $('empty').style.display='none';
       rows.forEach(function(r,i){ list.appendChild(rowEl(r,i)); });
     }
+  }
+  var _flashTimer;
+  function flash(msg){
+    var l=$('subLine'), orig=l.textContent;
+    l.textContent=orig+'  '+msg;
+    clearTimeout(_flashTimer);
+    _flashTimer=setTimeout(function(){ l.textContent=orig; }, 4000);
   }
 
   function fmtDate(iso){
@@ -263,17 +300,24 @@ a{color:var(--brand);text-decoration:none}
   $('q').addEventListener('input',load);
   $('refresh').addEventListener('click',load);
   $('export').addEventListener('click',function(){
-    var data=getData();
-    if(!data.length){alert('暫無資料可匯出。');return;}
-    var head=['ref','parent','phone','email','child','dob','grade','course','note','submittedAt'];
-    var csv=head.join(',')+'\n'+data.map(function(r){
-      return head.map(function(h){return '"'+String(r[h]==null?'':r[h]).replace(/"/g,'""')+'"';}).join(',');
-    }).join('\n');
-    var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
-    var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download='johnny_signups.csv';
-    a.click();URL.revokeObjectURL(a.href);
+    var ep=googleEndpoint();
+    function doExport(data){
+      if(!data.length){alert('暫無資料可匯出。');return;}
+      var head=['ref','parent','phone','email','child','dob','grade','course','note','submittedAt'];
+      var csv=head.join(',')+'\n'+data.map(function(r){
+        return head.map(function(h){return '"'+String(r[h]==null?'':r[h]).replace(/"/g,'""')+'"';}).join(',');
+      }).join('\n');
+      var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='johnny_signups.csv';
+      a.click();URL.revokeObjectURL(a.href);
+    }
+    if(ep){
+      fetch(ep+'?op=list').then(function(r){return r.ok?r.json():[];})
+        .then(function(g){doExport(g.length?g:localData());})
+        .catch(function(){doExport(localData());});
+    } else doExport(localData());
   });
 
   // ---- init ----
