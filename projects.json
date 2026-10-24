@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Web App Navigator",
+    "owner": "JimSir",
+    "note": "新增專案只需在此檔加一個 object 即可，頁面會自動載入。"
+  },
+  "categories": ["工具", "儀表板", "網站", "簡報"],
+  "projects": [
+    {
+      "id": "todo",
+      "name": "Todo List",
+      "desc": "現代響應式待辦事項應用，支援新增、刪除、標記完成，LocalStorage 持久化，深色模式。",
+      "stack": ["HTML", "CSS", "JavaScript", "LocalStorage"],
+      "status": "已上線",
+      "category": "工具",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/todo.html",
+      "local": "todo.html",
+      "updated": "2026-10-10",
+      "accent": "#4353ff"
+    },
+    {
+      "id": "dashboard",
+      "name": "Sales Dashboard",
+      "desc": "互動式銷售儀表板，含 KPI、SVG 圖表、可篩選可排序資料表，源自 Dashboard_Data.xlsx（2018–2020，99 筆記錄）。",
+      "stack": ["HTML", "CSS", "JavaScript", "SVG"],
+      "status": "開發中",
+      "category": "儀表板",
+      "link": "dashboard.html",
+      "local": "dashboard.html",
+      "updated": "2026-10-10",
+      "accent": "#00c2a8"
+    },
+    {
+      "id": "johnny-edu",
+      "name": "Johnny Education Centre",
+      "desc": "小朋友私人教育中心公司網站主頁，含公司簡介、教學理念、精選課程、師資介紹與聯絡方式。",
+      "stack": ["HTML", "CSS", "JavaScript"],
+      "status": "開發中",
+      "category": "網站",
+      "link": "johnny_edu_home.html",
+      "local": "johnny_edu_home.html",
+      "updated": "2026-10-24",
+      "accent": "#2563eb"
+    },
+    {
+      "id": "ai-training-deck",
+      "name": "AI 培訓路線簡報",
+      "desc": "新版 AI 課程及 OpenClaw 培訓路線之互動式 HTML 簡報（16:9），源自 2026-07-06 一小時會議記錄。",
+      "stack": ["HTML", "CSS", "JavaScript", "SVG"],
+      "status": "開發中",
+      "category": "簡報",
+      "link": "presentation.html",
+      "local": "presentation.html",
+      "updated": "2026-10-24",
+      "accent": "#ff7a45"
+    }
+  ]
+}
