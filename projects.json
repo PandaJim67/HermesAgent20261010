@@ -25,8 +25,8 @@
       "stack": ["HTML", "CSS", "JavaScript", "SVG"],
       "status": "開發中",
       "category": "儀表板",
-      "link": "dashboard.html",
-      "local": "dashboard.html",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/dashboard/",
+      "local": "dashboard/index.html",
       "updated": "2026-10-10",
       "accent": "#00c2a8"
     },
@@ -49,8 +49,8 @@
       "stack": ["HTML", "CSS", "JavaScript", "SVG"],
       "status": "開發中",
       "category": "簡報",
-      "link": "presentation.html",
-      "local": "presentation.html",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/presentation/",
+      "local": "presentation/index.html",
       "updated": "2026-10-24",
       "accent": "#ff7a45"
     }
