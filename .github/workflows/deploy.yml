@@ -1,0 +1,44 @@
+# Build and deploy static site to GitHub Pages
+# Docs: https://docs.github.com/en/pages/automating-task-execution
+name: Build and deploy static site to Pages
+
+on:
+  # Runs on every commit pushed to the main branch
+  push:
+    branches: ['main']
+
+  # Allows manual triggering from the UI
+  workflow_dispatch:
+
+# Required permission for GITHUB_TOKEN
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/setup-pages@v2
+
+      # For plain static sites (no build step)
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
