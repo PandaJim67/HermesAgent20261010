@@ -4,7 +4,7 @@
     "owner": "JimSir",
     "note": "新增專案只需在此檔加一個 object 即可，頁面會自動載入。"
   },
-  "categories": ["工具", "儀表板", "網站", "簡報"],
+  "categories": ["工具", "儀表板", "網站", "簡報", "遊戲"],
   "projects": [
     {
       "id": "todo",
@@ -53,6 +53,18 @@
       "local": "presentation/index.html",
       "updated": "2026-10-24",
       "accent": "#ff7a45"
+    },
+    {
+      "id": "kids-game",
+      "name": "小朋友學習樂園",
+      "desc": "5–8 歲卡通學習遊戲：英文生字（睇圖揀英文字）＋數學加減兩種模式，含計分、正確／錯誤動畫回饋與星星評級。",
+      "stack": ["HTML", "CSS", "JavaScript"],
+      "status": "已上線",
+      "category": "遊戲",
+      "link": "https://pandajim67.github.io/HermesAgent20261010/kids-game/",
+      "local": "kids-game/index.html",
+      "updated": "2026-10-24",
+      "accent": "#ff5fa2"
     }
   ]
 }
