@@ -30,9 +30,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/setup-pages@v2
-
       # For plain static sites (no build step)
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
